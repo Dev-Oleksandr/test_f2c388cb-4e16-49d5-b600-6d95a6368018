@@ -4,11 +4,17 @@ import {
   Catch,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
+import { inspect } from 'util';
 
 @Catch()
 export class GlobalExceptionFilter extends BaseExceptionFilter {
+  private logger = new Logger(GlobalExceptionFilter.name);
+
   override catch(exception: unknown, host: ArgumentsHost) {
+    this.logger.error(inspect(exception));
+
     if (exception instanceof HttpException) {
       return super.catch(
         new HttpException(
