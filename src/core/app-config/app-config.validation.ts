@@ -5,8 +5,11 @@ import { TrimmedStringSchema } from '../../common/schemas/trimmed-string.schema.
 const envSchema = z.object({
   PORT: StringToRequiredIntegerSchema,
 
+  DATABASE_HOST: TrimmedStringSchema,
   DATABASE_NAME: TrimmedStringSchema,
   DATABASE_USER: TrimmedStringSchema,
+  DATABASE_PORT: StringToRequiredIntegerSchema,
+
   DATABASE_PASSWORD: TrimmedStringSchema,
   BIND_DATABASE_PORT: StringToRequiredIntegerSchema,
 });
