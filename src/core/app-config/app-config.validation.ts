@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { StringToRequiredIntegerSchema } from '../common/schemas/string-to-required-integer.schema.js';
-import { TrimmedStringSchema } from '../common/schemas/trimmed-string.schema.js';
+import { StringToRequiredIntegerSchema } from '../../common/schemas/string-to-required-integer.schema.js';
+import { TrimmedStringSchema } from '../../common/schemas/trimmed-string.schema.js';
 
 const envSchema = z.object({
   PORT: StringToRequiredIntegerSchema,
