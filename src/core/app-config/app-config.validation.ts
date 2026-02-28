@@ -1,6 +1,15 @@
 import { z } from 'zod';
+import { StringToRequiredIntegerSchema } from '../common/string-to-required-integer.schema.js';
+import { TrimmedStringSchema } from '../common/trimmed-string.schema.js';
 
-const envSchema = z.object({});
+const envSchema = z.object({
+  PORT: StringToRequiredIntegerSchema,
+
+  DATABASE_NAME: TrimmedStringSchema,
+  DATABASE_USER: TrimmedStringSchema,
+  DATABASE_PASSWORD: TrimmedStringSchema,
+  BIND_DATABASE_PORT: StringToRequiredIntegerSchema,
+});
 
 export type AppConfig = z.infer<typeof envSchema>;
 
