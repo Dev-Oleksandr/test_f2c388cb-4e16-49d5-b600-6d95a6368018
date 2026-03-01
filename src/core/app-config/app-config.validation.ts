@@ -12,6 +12,9 @@ const envSchema = z.object({
 
   DATABASE_PASSWORD: TrimmedStringSchema,
   BIND_DATABASE_PORT: StringToRequiredIntegerSchema,
+
+  PROBATION_API_BASE_URL: TrimmedStringSchema,
+  PROBATION_API_KEY: TrimmedStringSchema,
 });
 
 export type AppConfig = z.infer<typeof envSchema>;
