@@ -1,12 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Unique} from 'typeorm';
 import { CampaignReportEventName } from '../types.js';
 
 @Entity('campaign_reports')
 @Unique(['eventTime', 'clientId', 'eventName'])
 export class CampaignReport {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+  // @PrimaryGeneratedColumn()
+  // id: number;
+  //
   @Column()
   campaign: string;
 
@@ -25,12 +25,12 @@ export class CampaignReport {
   @Column({ name: 'ad_id', type: 'uuid' })
   adId: string;
 
-  @Column({ name: 'client_id', type: 'uuid' })
+  @Column({ name: 'client_id', type: 'uuid', primary: true })
   clientId: string;
 
-  @Column({ name: 'event_name' })
+  @Column({ name: 'event_name', primary: true })
   eventName: CampaignReportEventName;
 
-  @Column({ name: 'event_time', type: 'timestamp' })
+  @Column({ name: 'event_time', type: 'timestamp', primary: true })
   eventTime: Date;
 }
