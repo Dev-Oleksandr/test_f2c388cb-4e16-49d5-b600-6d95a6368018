@@ -11,6 +11,7 @@ import { PROBATION_API_DEFAULT_PAGINATION_TAKE } from '../../core/probation-api/
 import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campaign-reports.schema.js';
 import { DataListResponse } from '../../common/dto/data-list-response.dto.js';
 import { PaginationQuery } from '../../common/decorators/pagination.decorator.js';
+import { SuccessResponse } from '../../common/success-response.js';
 
 @Injectable()
 export class CampaignReportsService {
@@ -21,12 +22,12 @@ export class CampaignReportsService {
     private readonly campaignReportsRepository: CampaignReportsRepository,
   ) {}
 
-  async syncCampaignReports(dto: SyncCampaignReportsQueryDto) {
+  syncCampaignReports(dto: SyncCampaignReportsQueryDto) {
     const request = this.formatDtoToRequest(dto);
     const observableCsvRows =
       this.probationApiService.fetchAllCampaignReports(request);
 
-    await lastValueFrom(
+    lastValueFrom(
       observableCsvRows.pipe(
         concatMap((rows) =>
           this.campaignReportsRepository.upsert(
@@ -38,6 +39,8 @@ export class CampaignReportsService {
       const message = 'An error occurred while fetching campaign reports';
       this.logger.error(message, error.message);
     });
+
+    return SuccessResponse;
   }
 
   async findAggregatedCampaignReports(

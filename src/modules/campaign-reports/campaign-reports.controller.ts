@@ -33,8 +33,7 @@ export class CampaignReportsController {
     @Query(new ZodValidationPipe(SyncCampaignReportsQuerySchema))
     query: SyncCampaignReportsQueryDto,
   ) {
-    this.campaignReportsService.syncCampaignReports(query);
-    return { message: 'ok' };
+    return this.campaignReportsService.syncCampaignReports(query);
   }
 
   @Get()
