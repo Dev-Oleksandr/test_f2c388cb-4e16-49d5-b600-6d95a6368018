@@ -16,6 +16,10 @@ import {
   GetAggregatedCampaignReportsDto,
   GetAggregatedCampaignReportsSchema,
 } from './schemas/get-aggregated-campaign-reports.schema.js';
+import {
+  Pagination,
+  PaginationQuery,
+} from '../../common/decorators/pagination.decorator.js';
 
 @Controller('campaign-reports')
 export class CampaignReportsController {
@@ -37,7 +41,11 @@ export class CampaignReportsController {
   getAggregatedCampaignReports(
     @Query(new ZodValidationPipe(GetAggregatedCampaignReportsSchema))
     query: GetAggregatedCampaignReportsDto,
+    @Pagination() pagination: PaginationQuery,
   ) {
-    return this.campaignReportsService.findAggregatedCampaignReports(query);
+    return this.campaignReportsService.findAggregatedCampaignReports(
+      query,
+      pagination,
+    );
   }
 }
