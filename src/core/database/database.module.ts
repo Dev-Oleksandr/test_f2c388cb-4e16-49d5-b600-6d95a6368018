@@ -1,19 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { AppConfigService } from '../app-config/app-config.service.js';
+import { getDatabaseConfig } from './database-config.js';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      inject: [AppConfigService],
-      useFactory: (config: AppConfigService): TypeOrmModuleOptions => ({
-        type: 'postgres',
-        host: config.get('DATABASE_HOST'),
-        username: config.get('DATABASE_USER'),
-        database: config.get('DATABASE_NAME'),
-        password: config.get('DATABASE_PASSWORD'),
-        port: config.get('DATABASE_PORT'),
-        logging: config.get('DATABASE_LOGGING'),
+      useFactory: (): TypeOrmModuleOptions => ({
+        ...getDatabaseConfig(),
         autoLoadEntities: true,
       }),
     }),

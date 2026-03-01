@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { campaignReportEventValues } from '../types.js';
+import { campaignReportEventValues } from '../../../common/types/campaign-report-event-name.type.js';
 
 export const GetAggregatedCampaignReportsSchema = z
   .object({

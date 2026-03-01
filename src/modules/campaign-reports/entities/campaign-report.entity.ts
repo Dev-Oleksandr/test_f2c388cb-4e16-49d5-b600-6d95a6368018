@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { CampaignReportEventName } from '../types.js';
+import { CampaignReportEventName } from '../../../common/types/campaign-report-event-name.type.js';
 
 @Entity('campaign_reports')
 export class CampaignReport {

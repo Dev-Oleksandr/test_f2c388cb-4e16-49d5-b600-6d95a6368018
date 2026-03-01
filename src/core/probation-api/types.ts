@@ -1,4 +1,4 @@
-import { CampaignReportEventName } from '../../modules/campaign-reports/types.js';
+import { CampaignReportEventName } from '../../common/types/campaign-report-event-name.type.js';
 
 type CampaignReportsPagination = {
   next: string;
