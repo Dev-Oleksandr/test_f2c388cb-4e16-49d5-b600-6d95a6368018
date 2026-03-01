@@ -12,7 +12,6 @@ const envSchema = z.object({
   DATABASE_PORT: StringToRequiredIntegerSchema,
   DATABASE_PASSWORD: TrimmedStringSchema,
   DATABASE_LOGGING: StringToRequiredBooleanSchema,
-  BIND_DATABASE_PORT: StringToRequiredIntegerSchema,
 
   PROBATION_API_BASE_URL: TrimmedStringSchema,
   PROBATION_API_KEY: TrimmedStringSchema,

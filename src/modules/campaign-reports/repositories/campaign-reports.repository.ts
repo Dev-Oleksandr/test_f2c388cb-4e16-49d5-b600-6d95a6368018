@@ -68,7 +68,7 @@ export class CampaignReportsRepository {
   ) {
     return this.campaignReportRepository
       .createQueryBuilder()
-      .select('ad_id as "adId", COUNT(*) AS count')
+      .select('ad_id as "adId", COUNT(*)::int AS count')
       .where('event_time BETWEEN :fromDate AND :toDate', {
         fromDate: condition.fromDate,
         toDate: condition.toDate,
