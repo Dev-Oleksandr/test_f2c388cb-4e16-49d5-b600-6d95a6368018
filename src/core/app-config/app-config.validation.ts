@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { StringToRequiredIntegerSchema } from '../../common/schemas/string-to-required-integer.schema.js';
 import { TrimmedStringSchema } from '../../common/schemas/trimmed-string.schema.js';
+import { StringToRequiredBooleanSchema } from '../../common/schemas/string-to-required-boolean.schema.js';
 
 const envSchema = z.object({
   PORT: StringToRequiredIntegerSchema,
@@ -9,8 +10,8 @@ const envSchema = z.object({
   DATABASE_NAME: TrimmedStringSchema,
   DATABASE_USER: TrimmedStringSchema,
   DATABASE_PORT: StringToRequiredIntegerSchema,
-
   DATABASE_PASSWORD: TrimmedStringSchema,
+  DATABASE_LOGGING: StringToRequiredBooleanSchema,
   BIND_DATABASE_PORT: StringToRequiredIntegerSchema,
 
   PROBATION_API_BASE_URL: TrimmedStringSchema,

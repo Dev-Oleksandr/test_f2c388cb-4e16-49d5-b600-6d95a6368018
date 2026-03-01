@@ -13,6 +13,7 @@ import { CampaignReport } from '../../modules/campaign-reports/entities/campaign
         database: config.get('DATABASE_NAME'),
         password: config.get('DATABASE_PASSWORD'),
         port: config.get('DATABASE_PORT'),
+        logging: config.get('DATABASE_LOGGING'),
         entities: [CampaignReport],
       }),
     }),
