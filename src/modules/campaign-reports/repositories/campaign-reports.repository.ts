@@ -3,6 +3,7 @@ import { CampaignReport } from '../entities/campaign-report.entity.js';
 import { DataSource, DeepPartial, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { PaginationQuery } from '../../../common/decorators/pagination.decorator.js';
+import { GetAggregatedCampaignReportsDto } from '../schemas/get-aggregated-campaign-reports.schema.js';
 
 @Injectable()
 export class CampaignReportsRepository {
@@ -20,11 +21,7 @@ export class CampaignReportsRepository {
   }
 
   async findAndCountAggregatedByCondition(
-    condition: {
-      fromDate: Date;
-      toDate: Date;
-      eventName: string;
-    },
+    condition: GetAggregatedCampaignReportsDto,
     paginationQuery: PaginationQuery,
   ) {
     const [rows, { total }] = await Promise.all([
@@ -34,11 +31,9 @@ export class CampaignReportsRepository {
     return { rows, total };
   }
 
-  private countAggregatedByCondition(condition: {
-    fromDate: Date;
-    toDate: Date;
-    eventName: string;
-  }) {
+  private countAggregatedByCondition(
+    condition: GetAggregatedCampaignReportsDto,
+  ) {
     return this.dataSource
       .createQueryBuilder()
       .select('COUNT(*)::int', 'total')
@@ -59,11 +54,7 @@ export class CampaignReportsRepository {
   }
 
   private findAllAggregatedByCondition(
-    condition: {
-      fromDate: Date;
-      toDate: Date;
-      eventName: string;
-    },
+    condition: GetAggregatedCampaignReportsDto,
     { take, skip }: PaginationQuery,
   ) {
     return this.campaignReportRepository
