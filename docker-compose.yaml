@@ -29,7 +29,7 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - "$BIND_PORT:3000"
+      - "$BIND_PORT:$PORT"
       - '9229:9229'
     depends_on:
       database:
