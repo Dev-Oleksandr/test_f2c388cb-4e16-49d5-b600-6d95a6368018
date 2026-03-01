@@ -7,13 +7,28 @@ import {
   Logger,
 } from '@nestjs/common';
 import { inspect } from 'util';
+import { AppException } from '../exceptions/app.exception.js';
 
 @Catch()
-export class GlobalExceptionFilter extends BaseExceptionFilter {
-  private logger = new Logger(GlobalExceptionFilter.name);
+export class AppGlobalExceptionFilter extends BaseExceptionFilter {
+  private logger = new Logger(AppGlobalExceptionFilter.name);
 
   override catch(exception: unknown, host: ArgumentsHost) {
     this.logger.error(inspect(exception));
+
+    if (exception instanceof AppException) {
+      return super.catch(
+        new HttpException(
+          {
+            message: exception.message,
+            status: `${exception.status}`,
+            meta: exception.meta,
+          },
+          exception.status,
+        ),
+        host,
+      );
+    }
 
     if (exception instanceof HttpException) {
       return super.catch(
