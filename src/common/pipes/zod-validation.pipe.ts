@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  Injectable,
-  PipeTransform,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, PipeTransform } from '@nestjs/common';
 import { ZodType } from 'zod';
 import { AppException } from '../exceptions/app.exception.js';
 

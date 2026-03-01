@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-  Unique,
-} from 'typeorm';
+import { Column, Entity, Unique } from 'typeorm';
 import { CampaignReportEventName } from '../types.js';
 
 @Entity('campaign_reports')
