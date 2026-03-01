@@ -17,4 +17,23 @@ export class CampaignReportsRepository {
       upsertType: 'on-conflict-do-update',
     });
   }
+
+  async findAggregatedByCondition(condition: {
+    fromDate: Date;
+    toDate: Date;
+    eventName: string;
+    take: number;
+  }) {
+    return this.campaignReportRepository
+      .createQueryBuilder()
+      .select('ad_id, COUNT(*) AS count')
+      .where('event_time BETWEEN :fromDate AND :toDate', {
+        fromDate: condition.fromDate,
+        toDate: condition.toDate,
+      })
+      .andWhere('event_name = :eventName', { eventName: condition.eventName })
+      .groupBy('ad_id')
+      .limit(condition.take)
+      .execute();
+  }
 }
