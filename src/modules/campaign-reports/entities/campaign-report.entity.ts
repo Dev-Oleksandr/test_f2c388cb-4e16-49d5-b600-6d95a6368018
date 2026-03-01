@@ -1,8 +1,7 @@
-import { Column, Entity, Unique } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { CampaignReportEventName } from '../types.js';
 
 @Entity('campaign_reports')
-@Unique(['eventTime', 'clientId', 'eventName'])
 export class CampaignReport {
   @Column()
   campaign: string;

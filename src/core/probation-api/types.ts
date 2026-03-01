@@ -30,5 +30,5 @@ export type CampaignReportParsedCsvRow = {
   campaign_id: string;
   client_id: string;
   event_name: CampaignReportEventName;
-  event_time: string;
+  event_time: Date;
 };

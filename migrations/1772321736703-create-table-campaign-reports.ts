@@ -13,7 +13,7 @@ export class CreateTableCampaignReports1772321736703 implements MigrationInterfa
             client_id UUID NOT NULL,
             event_name TEXT NOT NULL,
             event_time TIMESTAMP NOT NULL,
-            UNIQUE (event_time, client_id, event_name)
+            PRIMARY KEY (event_time, client_id, event_name)
         )
       `);
   }

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { AppConfigService } from '../app-config/app-config.service.js';
-import { CampaignReport } from '../../modules/campaign-reports/entities/campaign-report.entity.js';
 
 @Module({
   imports: [
@@ -15,9 +14,9 @@ import { CampaignReport } from '../../modules/campaign-reports/entities/campaign
         password: config.get('DATABASE_PASSWORD'),
         port: config.get('DATABASE_PORT'),
         logging: config.get('DATABASE_LOGGING'),
-        entities: [CampaignReport],
+        autoLoadEntities: true,
       }),
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

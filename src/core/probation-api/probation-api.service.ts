@@ -20,7 +20,7 @@ export class ProbationApiService {
   fetchAllCampaignReports(
     dto: CampaignReportsRequest,
   ): Observable<CampaignReportParsedCsvRow[]> {
-    const queryString = this.compareQueryString(dto);
+    const queryString = this.buildQueryString(dto);
 
     return this.fetchApi(`/tasks/campaign/reports?${queryString}`).pipe(
       expand(({ data }) => {
@@ -71,7 +71,7 @@ export class ProbationApiService {
     });
   }
 
-  private compareQueryString(dto: CampaignReportsRequest): string {
+  private buildQueryString(dto: CampaignReportsRequest): string {
     return new URLSearchParams({
       event_name: dto.event_name,
       from_date: dto.from_date,
