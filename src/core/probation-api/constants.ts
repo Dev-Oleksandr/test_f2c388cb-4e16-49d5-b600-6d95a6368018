@@ -1,0 +1,2 @@
+export const PROBATION_API_RETRY_MAX_COUNT = 5;
+export const PROBATION_API_RETRY_DELAY_MS = 1000;
