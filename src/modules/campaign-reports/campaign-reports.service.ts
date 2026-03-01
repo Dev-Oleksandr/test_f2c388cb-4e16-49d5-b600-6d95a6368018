@@ -9,6 +9,8 @@ import { CampaignReportsRepository } from './repositories/campaign-reports.repos
 import { concatMap, lastValueFrom } from 'rxjs';
 import { PROBATION_API_DEFAULT_PAGINATION_TAKE } from '../../core/probation-api/constants.js';
 import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campaign-reports.schema.js';
+import { DataListResponse } from '../../common/dto/data-list-response.dto.js';
+import { PaginationQuery } from '../../common/decorators/pagination.decorator.js';
 
 @Injectable()
 export class CampaignReportsService {
@@ -38,8 +40,17 @@ export class CampaignReportsService {
     });
   }
 
-  findAggregatedCampaignReports(query: GetAggregatedCampaignReportsDto) {
-    return this.campaignReportsRepository.findAggregatedByCondition(query);
+  async findAggregatedCampaignReports(
+    query: GetAggregatedCampaignReportsDto,
+    pagination: PaginationQuery,
+  ) {
+    const { rows, total } =
+      await this.campaignReportsRepository.findAndCountAggregatedByCondition(
+        query,
+        pagination,
+      );
+
+    return new DataListResponse(rows, pagination, total);
   }
 
   private formatDtoToRequest(
