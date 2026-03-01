@@ -1,5 +1,5 @@
 import { ProbationApiService } from '../../core/probation-api/probation-api.service.js';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SyncCampaignReportsQueryDto } from './schemas/sync-campaign-reports-query.schema.js';
 import {
   CampaignReportCsvRow,
@@ -12,6 +12,8 @@ import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campai
 
 @Injectable()
 export class CampaignReportsService {
+  private readonly logger = new Logger(CampaignReportsService.name);
+
   constructor(
     private readonly probationApiService: ProbationApiService,
     private readonly campaignReportsRepository: CampaignReportsRepository,
@@ -30,7 +32,10 @@ export class CampaignReportsService {
           ),
         ),
       ),
-    );
+    ).catch((error) => {
+      const message = 'An error occurred while fetching campaign reports';
+      this.logger.error(message, error.message);
+    });
   }
 
   findAggregatedCampaignReports(query: GetAggregatedCampaignReportsDto) {
