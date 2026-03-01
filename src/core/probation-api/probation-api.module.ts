@@ -9,6 +9,7 @@ import { ProbationApiService } from './probation-api.service.js';
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => ({
         baseURL: configService.get('PROBATION_API_BASE_URL'),
+        headers: { 'x-api-key': configService.get('PROBATION_API_KEY') },
       }),
     }),
   ],

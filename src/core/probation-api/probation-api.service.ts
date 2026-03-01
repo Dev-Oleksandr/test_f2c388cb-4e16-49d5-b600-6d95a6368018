@@ -10,54 +10,43 @@ import {
   CampaignReportsRequest,
   CampaignReportsResponse,
 } from './types.js';
-import { AppConfigService } from '../app-config/app-config.service.js';
 
 @Injectable()
 export class ProbationApiService {
   private readonly logger = new Logger(ProbationApiService.name);
-  private readonly apiKey: string;
 
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly appConfigService: AppConfigService,
-  ) {
-    this.apiKey = this.appConfigService.get('PROBATION_API_KEY');
-  }
+  constructor(private readonly httpService: HttpService) {}
 
   fetchAllCampaignReports(
     dto: CampaignReportsRequest,
   ): Observable<CampaignReportCsvRow[]> {
     const queryString = this.compareQueryString(dto);
 
-    return this.fetchPage(`/tasks/campaign/reports?${queryString}`).pipe(
+    return this.fetchApi(`/tasks/campaign/reports?${queryString}`).pipe(
       expand(({ data }) => {
         const nextUrl = data?.pagination?.next;
         if (!nextUrl) {
           return EMPTY;
         }
 
-        return this.fetchPage(nextUrl);
+        return this.fetchApi(nextUrl);
       }),
       map(({ data }) => this.parseCsv(data.csv)),
     );
   }
 
-  private fetchPage(url: string): Observable<CampaignReportsResponse> {
-    return this.httpService
-      .get<CampaignReportsResponse>(url, {
-        headers: { 'x-api-key': this.apiKey },
-      })
-      .pipe(
-        retry({
-          count: PROBATION_API_RETRY_MAX_COUNT,
-          delay: (error, retryCount) => {
-            const message = 'An error occurred while fetching campaign reports';
-            this.logger.error(message, error.message);
-            return timer(retryCount * PROBATION_API_RETRY_DELAY_MS);
-          },
-        }),
-        map((response) => response.data),
-      );
+  private fetchApi(url: string): Observable<CampaignReportsResponse> {
+    return this.httpService.get<CampaignReportsResponse>(url).pipe(
+      retry({
+        count: PROBATION_API_RETRY_MAX_COUNT,
+        delay: (error, retryCount) => {
+          const message = 'An error occurred while fetching campaign reports';
+          this.logger.error(message, error.message);
+          return timer(retryCount * PROBATION_API_RETRY_DELAY_MS);
+        },
+      }),
+      map(({ data }) => data),
+    );
   }
 
   private parseCsv(csv: string): CampaignReportCsvRow[] {
