@@ -1,12 +1,15 @@
-import {Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Unique} from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { CampaignReportEventName } from '../types.js';
 
 @Entity('campaign_reports')
 @Unique(['eventTime', 'clientId', 'eventName'])
 export class CampaignReport {
-  // @PrimaryGeneratedColumn()
-  // id: number;
-  //
   @Column()
   campaign: string;
 
