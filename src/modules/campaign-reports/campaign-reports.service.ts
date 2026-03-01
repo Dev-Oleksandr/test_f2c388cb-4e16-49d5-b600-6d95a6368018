@@ -8,6 +8,7 @@ import {
 import { CampaignReportsRepository } from './repositories/campaign-reports.repository.js';
 import { concatMap, lastValueFrom } from 'rxjs';
 import { PROBATION_API_DEFAULT_PAGINATION_TAKE } from '../../core/probation-api/constants.js';
+import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campaign-reports.schema.js';
 
 @Injectable()
 export class CampaignReportsService {
@@ -30,6 +31,10 @@ export class CampaignReportsService {
         ),
       ),
     );
+  }
+
+  findAggregatedCampaignReports(query: GetAggregatedCampaignReportsDto) {
+    return this.campaignReportsRepository.findAggregatedByCondition(query);
   }
 
   private formatDtoToRequest(
