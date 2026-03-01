@@ -56,7 +56,9 @@ export class ProbationApiService {
       return [];
     }
 
-    const headers = lines[0].split(',').map((h) => h.trim());
+    const headers = lines[0].split(',').map((header) => header.trim());
+
+    this.ensureRequiredHeaders(headers);
 
     return lines.slice(1).map((line) => {
       const values = line.split(',').map((v) => v.trim());
@@ -69,6 +71,28 @@ export class ProbationApiService {
         {} as CampaignReportParsedCsvRow,
       );
     });
+  }
+
+  private ensureRequiredHeaders(headers: Array<string>) {
+    const requiredHeaders = [
+      'ad',
+      'ad_id',
+      'adgroup',
+      'adgroup_id',
+      'campaign',
+      'campaign_id',
+      'client_id',
+      'event_name',
+      'event_time',
+    ];
+    const missingHeaders = requiredHeaders.filter(
+      (requiredHeader) => !headers.includes(requiredHeader),
+    );
+    if (missingHeaders.length) {
+      throw new Error(
+        `Invalid CSV: missing headers: ${missingHeaders.join(', ')}`,
+      );
+    }
   }
 
   private buildQueryString(dto: CampaignReportsRequest): string {
