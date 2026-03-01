@@ -1,22 +1,29 @@
-export interface IDataListResponse<T> {
-  limit: number;
-  offset: number;
-  total: number;
-  data: T[];
+import { PaginationQuery } from '../decorators/pagination.decorator.js';
+
+export class DataListResponse<T> {
+  readonly data: T[];
+  readonly meta: DataListMetaDto;
+
+  constructor(data: T[], paginationQuery: PaginationQuery, itemCount: number) {
+    this.data = data;
+    this.meta = new DataListMetaDto(paginationQuery, itemCount);
+  }
 }
 
-export class DataListResponse {
-  constructor(
-    private readonly limit: number,
-    private readonly offset: number,
-  ) {}
+class DataListMetaDto {
+  readonly page: number;
+  readonly take: number;
+  readonly itemCount: number;
+  readonly pageCount: number;
+  readonly hasPreviousPage: boolean;
+  readonly hasNextPage: boolean;
 
-  toResult<T>(data: T[], total: number): IDataListResponse<T> {
-    return {
-      total,
-      data,
-      limit: this.limit,
-      offset: this.offset,
-    };
+  constructor({ take, page }: PaginationQuery, itemCount: number) {
+    this.page = page;
+    this.take = take;
+    this.itemCount = itemCount;
+    this.pageCount = Math.ceil(this.itemCount / this.take);
+    this.hasPreviousPage = this.page > 1;
+    this.hasNextPage = this.page < this.pageCount;
   }
 }
