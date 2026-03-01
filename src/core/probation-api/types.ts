@@ -1,8 +1,8 @@
 import { CampaignReportEventName } from '../../modules/campaign-reports/types.js';
 
 type CampaignReportsPagination = {
-  next: string
-}
+  next: string;
+};
 
 type CampaignReportsData = {
   csv: string;
@@ -21,6 +21,14 @@ export type CampaignReportsRequest = {
   take: number;
 };
 
-export type CampaignReportCsvRow = {
-  [key: string]: string;
+export type CampaignReportParsedCsvRow = {
+  ad: string;
+  ad_id: string;
+  adgroup: string;
+  adgroup_id: string;
+  campaign: string;
+  campaign_id: string;
+  client_id: string;
+  event_name: CampaignReportEventName;
+  event_time: string;
 };

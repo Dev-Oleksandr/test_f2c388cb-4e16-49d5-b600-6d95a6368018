@@ -6,7 +6,7 @@ import {
   PROBATION_API_RETRY_MAX_COUNT,
 } from './constants.js';
 import {
-  CampaignReportCsvRow,
+  CampaignReportParsedCsvRow,
   CampaignReportsRequest,
   CampaignReportsResponse,
 } from './types.js';
@@ -19,7 +19,7 @@ export class ProbationApiService {
 
   fetchAllCampaignReports(
     dto: CampaignReportsRequest,
-  ): Observable<CampaignReportCsvRow[]> {
+  ): Observable<CampaignReportParsedCsvRow[]> {
     const queryString = this.compareQueryString(dto);
 
     return this.fetchApi(`/tasks/campaign/reports?${queryString}`).pipe(
@@ -49,7 +49,7 @@ export class ProbationApiService {
     );
   }
 
-  private parseCsv(csv: string): CampaignReportCsvRow[] {
+  private parseCsv(csv: string): CampaignReportParsedCsvRow[] {
     const lines = csv.split('\n').filter((line) => line.trim().length > 0);
 
     if (lines.length < 2) {
@@ -61,10 +61,13 @@ export class ProbationApiService {
     return lines.slice(1).map((line) => {
       const values = line.split(',').map((v) => v.trim());
 
-      return headers.reduce<CampaignReportCsvRow>((row, header, index) => {
-        row[header] = values[index] ?? '';
-        return row;
-      }, {});
+      return headers.reduce<CampaignReportParsedCsvRow>(
+        (row, header, index) => {
+          row[header] = values[index] ?? '';
+          return row;
+        },
+        {} as CampaignReportParsedCsvRow,
+      );
     });
   }
 

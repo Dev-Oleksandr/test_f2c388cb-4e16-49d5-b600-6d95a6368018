@@ -2,7 +2,7 @@ import { ProbationApiService } from '../../core/probation-api/probation-api.serv
 import { Injectable, Logger } from '@nestjs/common';
 import { SyncCampaignReportsQueryDto } from './schemas/sync-campaign-reports-query.schema.js';
 import {
-  CampaignReportCsvRow,
+  CampaignReportParsedCsvRow,
   CampaignReportsRequest,
 } from '../../core/probation-api/types.js';
 import { CampaignReportsRepository } from './repositories/campaign-reports.repository.js';
@@ -53,17 +53,17 @@ export class CampaignReportsService {
     };
   }
 
-  private mapFetchedFieldToUpsert(rows: Array<CampaignReportCsvRow>) {
+  private mapFetchedFieldToUpsert(rows: Array<CampaignReportParsedCsvRow>) {
     return rows.map((row) => ({
-      campaign: row['campaign'],
-      campaignId: row['campaign_id'],
-      adgroup: row['adgroup'],
-      adgroupId: row['adgroup_id'],
-      ad: row['ad'],
-      adId: row['ad_id'],
-      clientId: row['client_id'],
-      eventName: row['event_name'],
-      eventTime: row['event_time'],
+      campaign: row.campaign,
+      campaignId: row.campaign_id,
+      adgroup: row.adgroup,
+      adgroupId: row.adgroup_id,
+      ad: row.ad,
+      adId: row.ad_id,
+      clientId: row.client_id,
+      eventName: row.event_name,
+      eventTime: row.event_time,
     }));
   }
 }

@@ -1,8 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { CampaignReport } from '../entities/campaign-report.entity.js';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { CampaignReportCsvRow } from '../../../core/probation-api/types.js';
 
 @Injectable()
 export class CampaignReportsRepository {
@@ -11,7 +10,7 @@ export class CampaignReportsRepository {
     private readonly campaignReportRepository: Repository<CampaignReport>,
   ) {}
 
-  upsert(data: Array<CampaignReportCsvRow>) {
+  upsert(data: Array<DeepPartial<CampaignReport>>) {
     return this.campaignReportRepository.upsert(data, {
       conflictPaths: ['eventTime', 'clientId', 'eventName'],
       upsertType: 'on-conflict-do-update',
