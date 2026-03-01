@@ -9,6 +9,7 @@ import { CampaignReport } from '../../modules/campaign-reports/entities/campaign
       inject: [AppConfigService],
       useFactory: (config: AppConfigService): TypeOrmModuleOptions => ({
         type: 'postgres',
+        host: config.get('DATABASE_HOST'),
         username: config.get('DATABASE_USER'),
         database: config.get('DATABASE_NAME'),
         password: config.get('DATABASE_PASSWORD'),
@@ -19,4 +20,4 @@ import { CampaignReport } from '../../modules/campaign-reports/entities/campaign
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
