@@ -14,11 +14,15 @@ export class CreateTableCampaignReports1772321736703 implements MigrationInterfa
             event_name TEXT NOT NULL,
             event_time TIMESTAMP NOT NULL,
             PRIMARY KEY (event_time, client_id, event_name)
-        )
+        );
+        CREATE INDEX idx_campaign_reports_event ON campaign_reports (event_name, event_time);
       `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE campaign_reports;`);
+    await queryRunner.query(`
+        DROP INDEX idx_campaign_reports_event;
+        DROP TABLE campaign_reports;
+    `);
   }
 }
