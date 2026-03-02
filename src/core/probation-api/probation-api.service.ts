@@ -10,6 +10,7 @@ import {
   CampaignReportsRequest,
   CampaignReportsResponse,
 } from './types.js';
+import { CampaignReportEventName } from '../../common/types/campaign-report-event-name.type.js';
 
 @Injectable()
 export class ProbationApiService {
@@ -19,7 +20,7 @@ export class ProbationApiService {
 
   fetchAllCampaignReports(
     dto: CampaignReportsRequest,
-  ): Observable<CampaignReportParsedCsvRow[]> {
+  ): Observable<Array<CampaignReportParsedCsvRow>> {
     const queryString = this.buildQueryString(dto);
 
     return this.fetchApi(`/tasks/campaign/reports?${queryString}`).pipe(
@@ -41,7 +42,7 @@ export class ProbationApiService {
         count: PROBATION_API_RETRY_MAX_COUNT,
         delay: (error, retryCount) => {
           const message = 'An error occurred while fetching campaign reports';
-          this.logger.error(message, error.message);
+          this.logger.error(message, error.stack);
           return timer(retryCount * PROBATION_API_RETRY_DELAY_MS);
         },
       }),
@@ -49,31 +50,36 @@ export class ProbationApiService {
     );
   }
 
-  private parseCsv(csv: string): CampaignReportParsedCsvRow[] {
+  private parseCsv(csv: string): Array<CampaignReportParsedCsvRow> {
     const lines = csv.split('\n').filter((line) => line.trim().length > 0);
 
     if (lines.length < 2) {
       return [];
     }
 
-    const headers = lines[0].split(',').map((header) => header.trim());
+    const headerLine = lines[0];
 
-    this.ensureRequiredHeaders(headers);
+    const headers = headerLine
+      ? headerLine.split(',').map((header) => header.trim())
+      : undefined;
+
+    const requiredHeaders = this.ensureRequiredHeaders(headers);
 
     return lines.slice(1).map((line) => {
       const values = line.split(',').map((v) => v.trim());
+      const rawRow = Object.fromEntries(
+        requiredHeaders.map((header, index) => [header, values[index] ?? '']),
+      ) as Record<keyof CampaignReportParsedCsvRow, string>;
 
-      return headers.reduce<CampaignReportParsedCsvRow>(
-        (row, header, index) => {
-          row[header] = values[index] ?? '';
-          return row;
-        },
-        {} as CampaignReportParsedCsvRow,
-      );
+      return {
+        ...rawRow,
+        event_time: new Date(rawRow.event_time),
+        event_name: rawRow.event_name as CampaignReportEventName,
+      };
     });
   }
 
-  private ensureRequiredHeaders(headers: Array<string>) {
+  private ensureRequiredHeaders(headers?: Array<string>) {
     const requiredHeaders = [
       'ad',
       'ad_id',
@@ -86,13 +92,16 @@ export class ProbationApiService {
       'event_time',
     ];
     const missingHeaders = requiredHeaders.filter(
-      (requiredHeader) => !headers.includes(requiredHeader),
+      (requiredHeader) => !headers?.includes(requiredHeader),
     );
+
     if (missingHeaders.length) {
       throw new Error(
         `Invalid CSV: missing headers: ${missingHeaders.join(', ')}`,
       );
     }
+
+    return requiredHeaders;
   }
 
   private buildQueryString(dto: CampaignReportsRequest): string {
