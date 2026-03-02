@@ -12,10 +12,15 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "skipLibCheck": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "strict": true,
     "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": true,
+    "noErrorTruncation": true
   }
 }
