@@ -4,29 +4,29 @@ import { CampaignReportEventName } from '../../../common/types/campaign-report-e
 @Entity('campaign_reports')
 export class CampaignReport {
   @Column()
-  campaign: string;
+  campaign!: string;
 
   @Column({ name: 'campaign_id', type: 'uuid' })
-  campaignId: string;
+  campaignId!: string;
 
   @Column()
-  adgroup: string;
+  adgroup!: string;
 
   @Column({ name: 'adgroup_id', type: 'uuid' })
-  adgroupId: string;
+  adgroupId!: string;
 
   @Column()
-  ad: string;
+  ad!: string;
 
   @Column({ name: 'ad_id', type: 'uuid' })
-  adId: string;
+  adId!: string;
 
   @Column({ name: 'client_id', type: 'uuid', primary: true })
-  clientId: string;
+  clientId!: string;
 
   @Column({ name: 'event_name', primary: true })
-  eventName: CampaignReportEventName;
+  eventName!: CampaignReportEventName;
 
   @Column({ name: 'event_time', type: 'timestamp', primary: true })
-  eventTime: Date;
+  eventTime!: Date;
 }
