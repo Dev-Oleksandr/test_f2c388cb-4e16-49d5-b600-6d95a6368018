@@ -1,16 +1,11 @@
 import { z } from 'zod';
 import { campaignReportEventValues } from '../../../common/types/campaign-report-event-name.type.js';
+import { DateRangeSchema } from '../../../common/schemas/date-range.schema.js';
 
-export const SyncCampaignReportsQuerySchema = z
-  .object({
-    fromDate: z.coerce.date(),
-    toDate: z.coerce.date(),
-    eventName: z.enum(campaignReportEventValues),
-  })
-  .refine(({ fromDate, toDate }) => fromDate < toDate, {
-    message: 'fromDate must be less than toDate',
-  });
+export const SyncCampaignReportsQuerySchema = DateRangeSchema.extend({
+  eventName: z.enum(campaignReportEventValues),
+});
 
-export type SyncCampaignReportsQueryDto = z.infer<
+export type SyncCampaignReportsDto = z.infer<
   typeof SyncCampaignReportsQuerySchema
 >;
