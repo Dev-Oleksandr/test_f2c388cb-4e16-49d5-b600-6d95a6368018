@@ -20,7 +20,7 @@ export const Pagination = (
 ) =>
   createParamDecorator((_: unknown, ctx: ExecutionContext): PaginationQuery => {
     const request = ctx.switchToHttp().getRequest();
-    const parsedPage = Math.max(parseInt(request.query.page, 10) || 0, 0);
+    const parsedPage = parseInt(request.query.page, 10) || 0;
 
     const page = Math.max(parsedPage, PAGINATION_PAGE_MIN);
     const take = Math.max(
