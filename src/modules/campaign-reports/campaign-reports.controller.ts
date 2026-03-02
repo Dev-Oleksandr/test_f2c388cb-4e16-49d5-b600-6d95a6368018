@@ -1,13 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Query,
 } from '@nestjs/common';
 import {
-  SyncCampaignReportsQueryDto,
+  SyncCampaignReportsDto,
   SyncCampaignReportsQuerySchema,
 } from './schemas/sync-campaign-reports-query.schema.js';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe.js';
@@ -20,6 +22,10 @@ import {
   Pagination,
   PaginationQuery,
 } from '../../common/decorators/pagination.decorator.js';
+import {
+  CampaignReportJobStatusSchema,
+  GetCampaignReportJobStatus,
+} from './schemas/get-campaign-report-job-status.schema.js';
 
 @Controller('campaign-reports')
 export class CampaignReportsController {
@@ -30,10 +36,10 @@ export class CampaignReportsController {
   @Post()
   @HttpCode(HttpStatus.ACCEPTED)
   syncCampaignReports(
-    @Query(new ZodValidationPipe(SyncCampaignReportsQuerySchema))
-    query: SyncCampaignReportsQueryDto,
+    @Body(new ZodValidationPipe(SyncCampaignReportsQuerySchema))
+    dto: SyncCampaignReportsDto,
   ) {
-    return this.campaignReportsService.syncCampaignReports(query);
+    return this.campaignReportsService.syncCampaignReports(dto);
   }
 
   @Get()
@@ -46,5 +52,13 @@ export class CampaignReportsController {
       query,
       pagination,
     );
+  }
+
+  @Get('sync-status/:jobId')
+  getSyncJob(
+    @Param(new ZodValidationPipe(CampaignReportJobStatusSchema))
+    { jobId }: GetCampaignReportJobStatus,
+  ) {
+    return this.campaignReportsService.getCampaignReportSyncJob(jobId);
   }
 }
