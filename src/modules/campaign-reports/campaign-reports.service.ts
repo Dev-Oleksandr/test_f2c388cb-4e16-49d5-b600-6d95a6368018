@@ -7,12 +7,12 @@ import {
 } from '../../core/probation-api/types.js';
 import { CampaignReportsRepository } from './repositories/campaign-reports.repository.js';
 import { concatMap, lastValueFrom, merge, Observable, share, take } from 'rxjs';
-import { PROBATION_API_DEFAULT_PAGINATION_TAKE } from '../../core/probation-api/constants.js';
 import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campaign-reports.schema.js';
 import { DataListResponse } from '../../common/dto/data-list-response.dto.js';
 import { PaginationQuery } from '../../common/decorators/pagination.decorator.js';
 import { CampaignReportJobRepository } from './repositories/campaign-report-jobs.repository.js';
 import { AppException } from '../../common/exceptions/app.exception.js';
+import { AppConfigService } from '../../core/app-config/app-config.service.js';
 
 @Injectable()
 export class CampaignReportsService {
@@ -22,6 +22,7 @@ export class CampaignReportsService {
     private readonly probationApiService: ProbationApiService,
     private readonly campaignReportsRepository: CampaignReportsRepository,
     private readonly campaignReportJobRepository: CampaignReportJobRepository,
+    private readonly appConfigService: AppConfigService,
   ) {}
 
   async syncCampaignReports(dto: SyncCampaignReportsDto) {
@@ -126,7 +127,7 @@ export class CampaignReportsService {
       to_date: dto.toDate.toISOString(),
       from_date: dto.fromDate.toISOString(),
       event_name: dto.eventName,
-      take: PROBATION_API_DEFAULT_PAGINATION_TAKE,
+      take: this.appConfigService.get('PROBATION_API_DEFAULT_PAGINATION_TAKE'),
     };
   }
 

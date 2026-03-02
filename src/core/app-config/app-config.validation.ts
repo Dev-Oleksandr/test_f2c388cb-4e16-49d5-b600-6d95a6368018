@@ -15,6 +15,7 @@ const envSchema = z.object({
 
   PROBATION_API_BASE_URL: TrimmedStringSchema,
   PROBATION_API_KEY: TrimmedStringSchema,
+  PROBATION_API_DEFAULT_PAGINATION_TAKE: StringToRequiredIntegerSchema,
 });
 
 export type AppConfig = z.infer<typeof envSchema>;
