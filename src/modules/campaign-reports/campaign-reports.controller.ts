@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   SyncCampaignReportsDto,
@@ -26,7 +27,9 @@ import {
   CampaignReportJobStatusSchema,
   GetCampaignReportJobStatus,
 } from './schemas/get-campaign-report-job-status.schema.js';
+import { ApiKeyGuard } from '../../common/guards/api-key.guard.js';
 
+@UseGuards(ApiKeyGuard)
 @Controller('campaign-reports')
 export class CampaignReportsController {
   constructor(

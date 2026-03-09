@@ -13,10 +13,6 @@ import { ApiKeyGuard } from './common/guards/api-key.guard.js';
       provide: APP_FILTER,
       useClass: AppGlobalExceptionFilter,
     },
-    {
-      provide: APP_GUARD,
-      useClass: ApiKeyGuard,
-    },
   ],
 })
 export class AppModule {}
