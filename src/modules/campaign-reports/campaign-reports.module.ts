@@ -6,7 +6,6 @@ import { CampaignReportJob } from './entities/campaign-report-job.entity.js';
 import { CampaignReportsController } from './campaign-reports.controller.js';
 import { CampaignReportsService } from './campaign-reports.service.js';
 import { CampaignReportsRepository } from './repositories/campaign-reports.repository.js';
-import { CampaignReportJobRepository } from './repositories/campaign-report-jobs.repository.js';
 
 @Module({
   imports: [
@@ -17,7 +16,6 @@ import { CampaignReportJobRepository } from './repositories/campaign-report-jobs
   providers: [
     CampaignReportsService,
     CampaignReportsRepository,
-    CampaignReportJobRepository,
   ],
 })
 export class CampaignReportsModule {}

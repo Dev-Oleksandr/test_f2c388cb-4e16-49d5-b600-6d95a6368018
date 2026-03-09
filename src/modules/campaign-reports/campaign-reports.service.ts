@@ -10,7 +10,9 @@ import { concatMap, lastValueFrom, merge, Observable, share, take } from 'rxjs';
 import { GetAggregatedCampaignReportsDto } from './schemas/get-aggregated-campaign-reports.schema.js';
 import { DataListResponse } from '../../common/dto/data-list-response.dto.js';
 import { PaginationQuery } from '../../common/decorators/pagination.decorator.js';
-import { CampaignReportJobRepository } from './repositories/campaign-report-jobs.repository.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CampaignReportJob } from './entities/campaign-report-job.entity.js';
+import { Repository } from 'typeorm';
 import { AppException } from '../../common/exceptions/app.exception.js';
 import { AppConfigService } from '../../core/app-config/app-config.service.js';
 
@@ -21,14 +23,16 @@ export class CampaignReportsService {
   constructor(
     private readonly probationApiService: ProbationApiService,
     private readonly campaignReportsRepository: CampaignReportsRepository,
-    private readonly campaignReportJobRepository: CampaignReportJobRepository,
     private readonly appConfigService: AppConfigService,
+
+    @InjectRepository(CampaignReportJob)
+    private readonly campaignReportJobRepository: Repository<CampaignReportJob>,
   ) {}
 
   async syncCampaignReports(dto: SyncCampaignReportsDto) {
     const request = this.formatDtoToRequest(dto);
 
-    const job = await this.campaignReportJobRepository.create({
+    const job = await this.campaignReportJobRepository.save({
       status: 'pending',
     });
 
@@ -55,7 +59,7 @@ export class CampaignReportsService {
   }
 
   async getCampaignReportSyncJob(jobId: string) {
-    const job = await this.campaignReportJobRepository.getByCondition({
+    const job = await this.campaignReportJobRepository.findOneBy({
       id: jobId,
     });
 
