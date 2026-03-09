@@ -11,7 +11,7 @@ import { AppException } from '../exceptions/app.exception.js';
 
 @Catch()
 export class AppGlobalExceptionFilter extends BaseExceptionFilter {
-  private logger = new Logger(AppGlobalExceptionFilter.name);
+  private readonly logger = new Logger(AppGlobalExceptionFilter.name);
 
   override catch(exception: unknown, host: ArgumentsHost) {
     this.logger.error(inspect(exception));
@@ -46,7 +46,7 @@ export class AppGlobalExceptionFilter extends BaseExceptionFilter {
     super.catch(
       new HttpException(
         {
-          message: this.getErrorMessageOrEmpty(exception),
+          message: this.getErrorMessage(exception),
           status: `${HttpStatus.INTERNAL_SERVER_ERROR}`,
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -55,9 +55,10 @@ export class AppGlobalExceptionFilter extends BaseExceptionFilter {
     );
   }
 
-  private getErrorMessageOrEmpty(exception: unknown): string {
-    return typeof exception === 'object' && exception && 'message' in exception
-      ? `${exception.message}`
-      : '';
+  private getErrorMessage(exception: unknown): string {
+    if (typeof exception === 'object' && exception && 'message' in exception) {
+      return `${exception.message}`;
+    }
+    return 'Internal server error';
   }
 }
