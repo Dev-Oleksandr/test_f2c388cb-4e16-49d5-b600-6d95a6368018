@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { CampaignReportJobStatus } from '../types.js';
 import { Nullable } from '../../../common/types/nullable.js';
 
@@ -12,4 +12,10 @@ export class CampaignReportJob {
 
   @Column({ name: 'error_message', type: 'text', nullable: true })
   errorMessage!: Nullable<string>;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
+  createdAt!: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt!: Date;
 }
