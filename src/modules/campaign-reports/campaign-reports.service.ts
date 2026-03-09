@@ -75,9 +75,11 @@ export class CampaignReportsService {
   ): void {
     const setProcessing = this.createProcessingStatusStream(jobId, csvRows);
     const processData = this.createDataProcessingStream(csvRows);
-    lastValueFrom(merge(setProcessing, processData))
+    lastValueFrom(merge(setProcessing, processData), {
+      defaultValue: undefined,
+    })
       .then(() => this.completeJob(jobId))
-      .catch((error) => this.failJob(jobId, error));
+      .catch((error: unknown) => this.failJob(jobId, error));
   }
 
   private createProcessingStatusStream(
@@ -106,18 +108,25 @@ export class CampaignReportsService {
     );
   }
 
-  private completeJob(jobId: string): Promise<any> {
-    return this.campaignReportJobRepository.update(jobId, {
-      status: 'completed',
-    });
+  private async completeJob(jobId: string): Promise<void> {
+    try {
+      await this.campaignReportJobRepository.update(jobId, {
+        status: 'completed',
+      });
+    } catch (error) {
+      this.logger.error(`Failed to mark job ${jobId} as completed`, error);
+    }
   }
 
-  private failJob(jobId: string, error: Error): Promise<any> {
-    this.logger.error(`Error in sync job ${jobId}`, error.stack);
-    return this.campaignReportJobRepository.update(jobId, {
-      status: 'failed',
-      errorMessage: error.message,
-    });
+  private async failJob(jobId: string, error: unknown): Promise<void> {
+    try {
+      await this.campaignReportJobRepository.update(jobId, {
+        status: 'failed',
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      });
+    } catch (error) {
+      this.logger.error(`Failed to mark job ${jobId} as failed`, error);
+    }
   }
 
   private formatDtoToRequest(
